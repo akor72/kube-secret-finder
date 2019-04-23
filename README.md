@@ -2,8 +2,65 @@
 
 <div style="text-align:center"><img src ="Python_logo_and_wordmark.png" /><img src="cronjob.png" /></div>  
 
-Kubernetes cronjob. Finds unused secrets. Drops secrets with "istio" in the name.  
+Kubernetes cronjob. Finds unused secrets, drops secrets with "istio" in the name and sends result via email.  
 Находит предположительно незадействованные секреты в конфиге Kubernetes. Отбрасывает секреты с именами содержащими "istio"
+
+### IMPORTANT! Prerequisites
+First make sure that you run under a service account that has sufficient rights to view the objects.  
+To fulfill this requirement, you can apply the Roles-Setup.yaml file before deployment:  
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kubectl apply -f Roles-Setup.yaml  
+
+Role-setup.yml creates a new cluster role - view-secrets (it standard "view" clusterrole but extended to view secrets)  
+and a new service account - view-secrets linked to clusterrole.  
+Service account view-secrets runs pod described in cronjob.yaml  
+
+
+### What is this Kronjob useful for?
+Sends to ADDR_TO email a report on secrets that are not found in the bodies of Kubernetes objects and therefore,
+may be unused.  
+
+### SETUP
+1. First of all apply Roles-setup.yml:  
+kubectl apply -f Roles-setup.yml  
+2. Build docker image:  
+docker build .  
+3. Push docker image into your docker registry  
+4. In cronjob.yml change ${YOUR_IMAGE_PULL_SECRET} and ${YOUR_DOCKER_IMAGE} variables to fit your registry  
+5. Apply cronjob.yml to your Kubernetes cluster:  
+kubectl apply -f cronjob.yml  
+
+### Variables:
+SCHEDULE: "0 0 * * 0 " - (cronjob.yml) job run time (in this example every sunday 00:00)  
+WHERE_AM_I: "DEV" - environment mark (Dev Stage Prod etc) appears in email Subject  
+MAILSERVER: "mailserver" - smtp server name or IP (port 25)  
+ADDR_FROM: "kube-secrets-finder@example.com" - field "From:"  
+ADDR_TO: "devops@example.com" - email to send a report  
+requirements.txt - python libs  
+
+### How does it work
+It's python. Connects to the kubernetes API, takes the names of all secrets in all namespaces  
+and searches for references to them in the bodies of PODs, deployments, configmaps, service accounts and ingresses.  
+After that, it connects to the mail server MAILSERVER and sends an email to the ADDR_TO mailbox.  
+
+### Sample Report Letter
+Subject: Kube DEV Secrets Finder  
+From: kube-secrets-finder@example.com  
+To: devops@example.com  
+
+EmailBody:  
+DEV. This 5 secrets looks like unused  
+
+aservice-postgres-credentials  
+bservice-rabbit-credentials  
+cservice-postgres-credentials  
+dservice-postgres-credentials  
+eservice-postgres-credentials  
+
+### Limitations
+Secrets with the names of istio can be discarded in the first cycle, so as not to search for them by configs.  
+The letter duplicates the names of secrets, when the names coincide in different namespaces.  
+
 
 ### ВАЖНО! Пререквизиты
 Сначала убедитесь, что запускаете под под сервисным аккаунтом, который имеет достаточно прав на просмотр объектов.  
