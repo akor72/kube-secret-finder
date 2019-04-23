@@ -1,0 +1,39 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: kube-secrets-finder-cron
+spec:
+  schedule: "${SCHEDULE}" #UTC
+  concurrencyPolicy: Replace
+  startingDeadlineSeconds: 3600
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: "false"
+          labels:
+            app: kube-secrets-finder-cron
+          name: kube-secrets-finder-cron
+        spec:
+          serviceAccountName: view-secrets
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: registry-gl-sdvor-com-secret
+          containers:
+          - image: ${DOCKER_IMAGE}
+            imagePullPolicy: Always
+            name: kube-secrets-finder-cron
+            env:
+              - name: DEPLOY
+                value: "${DEPLOY}"
+              - name: WHERE_AM_I
+                value: "${WHERE_AM_I}"
+              - name: MAILSERVER
+                value: "${MAILSERVER}"
+              - name: ADDR_FROM
+                value: "${ADDR_FROM}"
+              - name: ADDR_TO
+                value: "${ADDR_TO}"
