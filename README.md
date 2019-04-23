@@ -31,8 +31,6 @@ WHERE_AM_I: примеры "Dev" "Stage" или "Prod" - в теме письм�
 MAILSERVER: "mailserver" - имя или IP почтового сервера/сервиса с 25 портом
 ADDR_FROM: "kube-secrets-finder@example.com" - не имеет значения, но разхардкодил  
 ADDR_TO: "devops@example.com" - емаил куда слать отчет о проверке  
-
-
 requirements.txt - список библиотек python  
 
 ### Логика
@@ -41,17 +39,17 @@ requirements.txt - список библиотек python
 После этого подключается к почтовому серверу MAILSERVER и отправляет письмо на ящик ADDR_TO.  
 
 ### Пример письма с отчётом
-Subject: Kube DEV Secrets Finder
-From: kube-secrets-finder@example.com
-To: devops@example.com
-DEV. This 5 secrets looks like unused 
+Subject: Kube DEV Secrets Finder  
+From: kube-secrets-finder@example.com  
+To: devops@example.com  
+DEV. This 5 secrets looks like unused  
 
-aservice-postgres-credentials 
-bservice-rabbit-credentials 
-cservice-postgres-credentials 
-dservice-postgres-credentials 
-eservice-postgres-credentials 
- 
+aservice-postgres-credentials  
+bservice-rabbit-credentials  
+cservice-postgres-credentials  
+dservice-postgres-credentials  
+eservice-postgres-credentials  
+
 
 ### UPGR 22.04.19
 Переписал тело программы, расписал по функциям
