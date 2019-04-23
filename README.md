@@ -1,5 +1,5 @@
 # kube-secret-finder
-Kubernetes cronjob. Finds unused secrets. Drops secrets with "istio" in the name
+Kubernetes cronjob. Finds unused secrets. Drops secrets with "istio" in the name.  
 Находит предположительно незадействованные секреты в конфиге Kubernetes. Отбрасывает секреты с именами содержащими "istio"
 
 # Kube Secrets Finder (kube cronjob)
