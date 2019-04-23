@@ -1,11 +1,9 @@
-# kube-secret-finder
+# Kube Secrets Finder (kubernetes cronjob)
+
+<div style="text-align:center"><img src ="Python_logo_and_wordmark.png" /><img src="cronjob.png" /></div>  
+
 Kubernetes cronjob. Finds unused secrets. Drops secrets with "istio" in the name.  
 Находит предположительно незадействованные секреты в конфиге Kubernetes. Отбрасывает секреты с именами содержащими "istio"
-
-# Kube Secrets Finder (kube cronjob)
-
-<div style="text-align:center"><img src ="Python_logo_and_wordmark.png" /><img src="cronjob.png" /></div>
-
 
 ### ВАЖНО! Пререквизиты
 Сначала убедитесь, что запускаете под под сервисным аккаунтом, который имеет достаточно прав на просмотр объектов.  
