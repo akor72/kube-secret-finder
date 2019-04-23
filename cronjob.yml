@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: kube-secrets-finder-cron
 spec:
-  schedule: "${SCHEDULE}" #UTC
+  schedule: "0 0 * * 0" #UTC
   concurrencyPolicy: Replace
   startingDeadlineSeconds: 3600
   failedJobsHistoryLimit: 3
