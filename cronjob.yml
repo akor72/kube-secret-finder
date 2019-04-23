@@ -13,7 +13,7 @@ spec:
       template:
         metadata:
           annotations:
-            sidecar.istio.io/inject: "false"
+            sidecar.istio.io/inject: "false" # if you have istio and don't want its sidecars
           labels:
             app: kube-secrets-finder-cron
           name: kube-secrets-finder-cron
@@ -21,9 +21,9 @@ spec:
           serviceAccountName: view-secrets
           restartPolicy: Never
           imagePullSecrets:
-          - name: registry-gl-sdvor-com-secret
+          - name: ${YOUR_IMAGE_PULL_SECRET} # use your secret for docker registry
           containers:
-          - image: ${DOCKER_IMAGE}
+          - image: ${YOUR_DOCKER_IMAGE} # change to your docker image name
             imagePullPolicy: Always
             name: kube-secrets-finder-cron
             env:
